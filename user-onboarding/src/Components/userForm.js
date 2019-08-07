@@ -13,13 +13,13 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import './userForm.css'
+import './userForm.css';
 
 const useStyles = makeStyles({
   card: {
     maxWidth: 500,
     display: 'flex',
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     flexDirection: 'column',
     flexWrap: 'wrap'
   },
@@ -38,46 +38,59 @@ const UserForm = ({ errors, touched, values, status }) => {
   }, [status]);
   return (
     <>
-    <div classname= "container2">
-    <Card className = {classes.card}>
-      <h2>New User Form</h2>
-      <Form className = "formCon" render={formikProps => <UserCard {...formikProps} />}>
-        <Field type="text" name="name" placeholder="Name..." />
-        {touched.name && errors.name && <p className="error">{errors.name}</p>}
-        <Field type="text" name="email" placeholder="email..." />
-        {touched.email && errors.email && (
-          <p className="error">{errors.email}</p>
-        )}
-        <Field type="password" name="password" placeholder="password.." />
-        {touched.password && errors.password && (
-          <p className="error">{errors.password}</p>
-        )}
-        <label className="checkbox-container">
-          Do you accept the terms of service?
-          <Field type="checkbox" name="terms" checked={values.terms} />
-          {errors.terms && <p className="error">{errors.terms}</p>}
-          <span className="checkmark" />
-        </label>
+      <div className="container2">
+        <Card className={classes.card}>
+          <h2>New User Form</h2>
+          <Form
+            className="formCon"
+            render={formikProps => <UserCard {...formikProps} />}
+          >
+            <Field type="text" name="name" placeholder="Name..." />
+            {touched.name && errors.name && (
+              <p className="error">{errors.name}</p>
+            )}
+            <Field type="text" name="email" placeholder="email..." />
+            {touched.email && errors.email && (
+              <p className="error">{errors.email}</p>
+            )}
+            <Field type="password" name="password" placeholder="password.." />
+            {touched.password && errors.password && (
+              <p className="error">{errors.password}</p>
+            )}
+            <label className="checkbox-container">
+              Do you accept the terms of service?
+              <Field type="checkbox" name="terms" checked={values.terms} />
+              {errors.terms && <p className="error">{errors.terms}</p>}
+              <span className="checkmark" />
+            </label>
+            <Field component="select" className="role-select" name="role">
+              <option>Please Choose an Option</option>
+              <option value="UI dev"> UI developer</option>
+              <option value="Backend Dev">Backend Dev</option>
+              <option value="Frontend Dev">Frontend Dev</option>
+              <option value="UX designer">UX designer</option>
+            </Field>
+            {errors.role && <p className="error">{errors.role}</p>}
 
-        <button type="submit">Create Account</button>
-    </Form>
-    </Card>
-</div>
+            <button type="submit">Create Account</button>
+          </Form>
+        </Card>
+      </div>
 
-
-    <div className ="userCardCon">
-    {users.map(user => (<UserCard key = {user.id} props ={user}/>  ))}
-    </div>
+      <div className="userCardCon">
+        {users.map(user => (
+          <UserCard key={user.id} props={user} />
+        ))}
+      </div>
     </>
-
-
   );
 };
 
 //===== Time to use a Higher Order Component
 const FormikUserForm = withFormik({
-  mapPropsToValues({ name, email, password, terms }) {
+  mapPropsToValues({ name, email, password, terms, role }) {
     return {
+      role: role || '',
       name: name || '',
       email: email || '',
       password: password || '',
@@ -90,6 +103,7 @@ const FormikUserForm = withFormik({
     name: Yup.string().required('Please enter a name'),
     email: Yup.string().required('Enter an email'),
     password: Yup.string().required('Create a password'),
+    role: Yup.string().required('Select a role'),
     terms: Yup.bool().oneOf([true], 'Please accept the terms of serivce')
   }),
   handleSubmit(values, { resetForm, setStatus }) {
@@ -99,7 +113,7 @@ const FormikUserForm = withFormik({
         console.log(res);
         console.log(values);
         setStatus(res.data);
-         resetForm();
+        resetForm();
       })
       .catch(err => console.log(err.response));
   }

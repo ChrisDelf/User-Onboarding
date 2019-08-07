@@ -1,6 +1,8 @@
 .container2{
-  align-self:center;
+  align-items:center;
   display:flex;
+  justify-content:center;
+
 
 
 }
