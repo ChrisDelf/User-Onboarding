@@ -1,0 +1,28 @@
+.container2{
+  align-self:center;
+  display:flex;
+
+
+}
+
+.formCon{
+  width: 220px;
+  justify:center;
+  align-content:center;
+  align-self:center;
+}
+.checkbox-container{
+  margin: 20px;
+}
+.error{
+  font-size: .7rem;
+  color: red;
+}
+
+.userCardCon{
+  display:flex;
+  flex-direction: row;
+
+
+}
+

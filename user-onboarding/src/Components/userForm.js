@@ -4,8 +4,32 @@ import { Form, Field, withFormik, Formik } from 'formik';
 import * as Yup from 'yup';
 import UserCard from './UserCard';
 
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+
+import './userForm.css'
+
+const useStyles = makeStyles({
+  card: {
+    maxWidth: 500,
+    display: 'flex',
+    justifyContent: "space-between",
+    flexDirection: 'column',
+    flexWrap: 'wrap'
+  },
+  media: {
+    height: 200
+  }
+});
 const UserForm = ({ errors, touched, values, status }) => {
   const [users, setUsers] = useState([]);
+  const classes = useStyles();
   useEffect(() => {
     // status sometimes comes through as undefined
     if (status) {
@@ -13,9 +37,11 @@ const UserForm = ({ errors, touched, values, status }) => {
     }
   }, [status]);
   return (
-    <div>
+    <>
+    <div classname= "container2">
+    <Card className = {classes.card}>
       <h2>New User Form</h2>
-      <Form render={formikProps => <UserCard {...formikProps} />}>
+      <Form className = "formCon" render={formikProps => <UserCard {...formikProps} />}>
         <Field type="text" name="name" placeholder="Name..." />
         {touched.name && errors.name && <p className="error">{errors.name}</p>}
         <Field type="text" name="email" placeholder="email..." />
@@ -34,9 +60,17 @@ const UserForm = ({ errors, touched, values, status }) => {
         </label>
 
         <button type="submit">Create Account</button>
-      </Form>
+    </Form>
+    </Card>
+</div>
+
+
+    <div className ="userCardCon">
     {users.map(user => (<UserCard key = {user.id} props ={user}/>  ))}
     </div>
+    </>
+
+
   );
 };
 
@@ -65,7 +99,7 @@ const FormikUserForm = withFormik({
         console.log(res);
         console.log(values);
         setStatus(res.data);
-        // resetForm();
+         resetForm();
       })
       .catch(err => console.log(err.response));
   }
